@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Добавление доменов и DNS записей в Cloudflare</title>
+    <style>
+        fieldset{
+      border: 1px solid #e2e2e2;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    legend{
+      padding: 0 10px;
+      width: auto;
+    }
+    .invalid{
+      color: #dc3545!important;
+      border: 1px solid #dc3545!important;
+    }
+    .valid{
+      color: #28a745!important;
+      border: 1px solid #28a745!important;
+    }
+    .progress{
+      height: 2rem;
+      margin-bottom: 20px;
+    }
+    .fa{
+      font-size: 1.5em;
+      vertical-align: top;
+    }
+    .fa-check,
+    .green{
+      color: #28a745;
+    }
+    .fa-times,
+    .red{
+      color: #dc3545;
+    }
+    .status{
+      width: 70px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+    <div class="bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                        <a class="navbar-brand" href="https://anticorporativ.ru" style="background: url('https://anticorporativ.ru/wp-content/themes/anti/i/logo-white.png') no-repeat; width: 193px;
+
+height: 41px;"></a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                       
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <fieldset>
+                    <legend>Добавление доменов и DNS записей в Cloudflare</legend>
+					
+					<div>Интерфейс <a href="https://anticorporativ.ru" target="_blank">Anticorporativ.ru</a><br />
+                     Код: root - Телеграм-канал <a href="https://t.me/z_tds" target="_blank" >https://t.me/z_tds</a><br />
+					 Скачать <a href="https://anticorporativ.ru/wp-content/uploads/2018/11/cloud.zip">этот скрипт</a></div>
+					
+                    <form id="form" action="" method="post" class="needs-validation" novalidate>
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-12 col-form-label">Ваш Email:</label>
+                            <div class="col-sm-12">
+                                <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelpId" placeholder="Например: example@mail.com" required>
+                                <small id="emailHelpId" class="form-text text-muted">Введите вашу почту</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="apikey" class="col-sm-12 col-form-label">Ваш Api key</label>
+                            <div class="col-sm-12">
+                                <input type="text" name="apikey" id="apikey" class="form-control" placeholder="Например: d249b90ceef68f9087c5b5efaca3957935b70" aria-describedby="ApiHelpId" required>
+                                <small id="ApiHelpId" class="text-muted">Введите Api key</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="domainsList" class="col-sm-12 col-form-label">Ваши домены</label>
+                            <div class="col-sm-12">
+                                <textarea class="form-control" name="domainsList" id="domainsList" rows="6" required aria-describedby="domainsListHelpId" placeholder="Например: google.com"></textarea>
+                                <small id="domainsListHelpId" class="text-muted">Введите список доменов каждый с новой строки</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ip" class="col-sm-12 col-form-label">IP</label>
+                            <div class="col-sm-12">
+                                <input type="text" name="ip" id="ip" class="form-control" required placeholder="Например: 85.82.83.84" aria-describedby="ipHelpId" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}">
+                                <small id="ipHelpId" class="text-muted">Введите IP-адрес</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="pauseBeforeSearching" class="col-sm-12 col-form-label">Задержка перед поиском</label>
+                            <div class="col-sm-12">
+                                <input type="text" name="pauseBeforeSearching" id="pauseBeforeSearching" class="form-control" placeholder="Задержка перед поиском старых DNS записей" required aria-describedby="pauseHelpId" value="10">
+                                <small id="pauseHelpId" class="text-muted">Задержка перед поиском старых DNS записей (в cloudflare 60
+                  секунд)</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check row">
+                                <label class="form-check-label col-sm-12">
+                                    <input type="checkbox" class="form-check-input" name="delRecords" id="delRecords" checked value="">
+                                    Искать и удалять старые DNS записи
+                                </label>
+                            </div>
+                            <div class="form-check row">
+                                <label class="form-check-label col-sm-12">
+                                    <input type="checkbox" class="form-check-input" name="useHttps" id="useHttps" checked value="">
+                                    Всегда использовать HTTPS
+                                </label>
+                            </div>
+                            <div class="form-check row">
+                                <label class="form-check-label col-sm-12">
+                                    <input type="checkbox" class="form-check-input" name="autoHttpsRewrites" id="autoHttpsRewrites" checked value="">
+                                    Automatic https rewrites
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary">Отправить</button>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+				
+				
+				
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Подождите, идёт обработка...</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="modal-result"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $.validator.methods.email = function(value, element) {
+            return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/.test(value);
+        }
+        $.validator.methods.apikey = function(value, element) {
+            return this.optional(element) || /^[a-f0-9]{32,48}$/.test(value);
+        }
+        $.validator.methods.domainsList = function(value, element) {
+            //Get the user input
+            var hostnames = document.getElementById('domainsList').value;
+            //Regex to validate hostname
+            var re = new RegExp(/^([а-яА-Яa-zA-Z0-9]([а-яА-Яa-zA-Z0-9\-]{0,61}[а-яА-Яa-zA-Z0-9])?\.)+[а-яА-Яa-zA-Z]{2,6}$/);
+            //Trim whitespace
+            hostnames = hostnames.trim();
+            //Explode into an array
+            hostnames = hostnames.split("\n");
+            //Loop through array & test each hostname with regex
+            var is_valid = true;
+            for (var i = 0; i < hostnames.length; i++) {
+                var hostname = hostnames[i].trim();
+                if (re.test(hostname)) {
+                    is_valid = true; //if valid, continue loop
+                } else {
+                    is_valid = false; //if invalid, break loop and return false
+                    break;
+                }
+            } //end for loop
+            return is_valid;
+        }
+        $.validator.methods.ip = function(value, element) {
+            return this.optional(element) || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(value);
+        }
+        $.validator.methods.pauseBeforeSearching = function(value, element) {
+            return this.optional(element) || /^\d{1,}$/.test(value);
+        }
+
+        function getCookie(name) {
+            var matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function setCookie(name, value, options) {
+            options = options || {};
+
+            var expires = options.expires;
+
+            if (typeof expires == "number" && expires) {
+                var d = new Date();
+                d.setTime(d.getTime() + expires * 1000);
+                expires = options.expires = d;
+            }
+            if (expires && expires.toUTCString) {
+                options.expires = expires.toUTCString();
+            }
+
+            value = encodeURIComponent(value);
+
+            var updatedCookie = name + "=" + value;
+
+            for (var propName in options) {
+                updatedCookie += "; " + propName;
+                var propValue = options[propName];
+                if (propValue !== true) {
+                    updatedCookie += "=" + propValue;
+                }
+            }
+
+            document.cookie = updatedCookie;
+        }
+
+        function initCookie() {
+            var emailField = $('#email');
+            var apikeyField = $('#apikey');
+            var ipField = $('#ip');
+
+
+
+            if (getCookie('emailAdress')) {
+                emailField.val(getCookie('emailAdress'));
+            } else {
+                if (emailField.val()) {
+                    setCookie('emailAdress', emailField.val(), { expires: 2592000 });
+                }
+            }
+            if (getCookie('apikey')) {
+                apikeyField.val(getCookie('apikey'));
+            } else {
+                if (apikeyField.val()) {
+                    setCookie('apikey', apikeyField.val(), { expires: 2592000 });
+                }
+            }
+            if (getCookie('ipAdress')) {
+                ipField.val(getCookie('ipAdress'));
+            } else {
+                if (ipField.val()) {
+                    setCookie('ipAdress', ipField.val(), { expires: 2592000 });
+                }
+            }
+        }
+
+        initCookie();
+
+        $("#delRecords").change(function() {
+            if (this.checked) {
+                $('#pauseBeforeSearching').parent().parent().show()
+            } else {
+                $('#pauseBeforeSearching').parent().parent().hide()
+            }
+        });
+
+        $('#form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                apikey: {
+                    required: true,
+                    apikey: true
+                },
+                domainsList: {
+                    required: true,
+                    domainsList: true
+                },
+                ip: {
+                    required: true,
+                    ip: true
+                },
+                pauseBeforeSearching: {
+                    required: true,
+                    pauseBeforeSearching: true
+                }
+
+            },
+            messages: {
+                email: {
+                    required: 'Поле обязательное для заполнения',
+                    email: 'Заполните поле в формате: example@mail.com'
+                },
+                apikey: {
+                    required: 'Поле обязятельное для заполнения',
+                    apikey: 'Заполние поле в формате: d249b90ceef68f9087c5b5efaca3957935b70'
+                },
+                domainsList: {
+                    required: 'Поле обязательно для заполнения',
+                    domainsList: 'Заполните поле в формате: example.com (каждый с новой строки)'
+                },
+                ip: {
+                    required: 'Поле обязательно для заполнения',
+                    ip: 'Заполните поле в формате: 85.82.83.84'
+                },
+                pauseBeforeSearching: {
+                    required: 'Поле обязательно для заполнения',
+                    pauseBeforeSearching: 'Заполните поле в цифровым значением например: 10'
+                }
+            },
+            submitHandler: function(form, e) {
+                e.preventDefault();
+                initCookie();
+
+                $('.form-check-input').each(function() {
+                    $(this).is(":checked") ? $(this).val('1') : $(this).val('0');
+                });
+
+                var form_data = $(form).serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "add_domains.php",
+                    data: form_data,
+                    dataType: 'json',
+                    beforeSend: function(xhr) {
+                        $('.progress-bar').css('width', '0%');
+                        $('.progress-bar').text('');
+                        $('.modal-result').html('');
+                        $('.modal-title').text('Подождите, идёт обработка...');
+                        $('#exampleModalCenter').modal();
+                    },
+                    xhrFields: {
+                        previous_text: '',
+                        onprogress: function(e) {
+                            var new_response = e.target.responseText.substring(e.target.previous_text.length);
+                            var result = JSON.parse(new_response);
+                            var tr = '';
+                            $('.progress-bar').css('width', result.progress + '%');
+                            $('.progress-bar').addClass('progress-bar-animated');
+                            $('.progress-bar').text(result.progress + '% Выполнено');
+                            e.target.previous_text = e.target.responseText;
+                            $.each(result, function(key, value) {
+                                if (key === "progress" || key === "domen") {
+                                    return;
+                                } else {
+                                    tr += value;
+                                }
+                            });
+                            $output = '<table class="table"><thead>' +
+                                '<tr><th scope="col">Домен ' + result.domen + '</th><th scope="col">Статус</th></tr></thead>' +
+                                '<tbody>' + tr + '</tbody></table>';
+                            $('.modal-result').append($output);
+                        }
+                    },
+                    complete: function(response) {
+                        $('.progress-bar').removeClass('progress-bar-animated');
+                        $('.modal-title').text('Завершено!');
+                    }
+                });
+            },
+            errorClass: 'invalid-feedback',
+            errorElementClass: 'invalid',
+            validClass: 'valid',
+            onfocusout: function(element) { $(element).valid(); },
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent("div"));
+            },
+            errorElement: 'div',
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass(this.settings.errorElementClass).removeClass(validClass);
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass(this.settings.errorElementClass).removeClass(errorClass).addClass(validClass);
+            },
+        })
+    });
+    </script>
+</body>
+
+</html>
